@@ -22,10 +22,10 @@ ORDER BY total_death_count DESC
 
 -- 3
 
-SELECT location, population, MAX(total_cases) AS infection_count
+SELECT continent, location, population, MAX(total_cases) AS infection_count
 , MAX((total_cases/population))*100 AS percent_population_infected
 FROM COVID19..COVID19Deaths
-GROUP BY location, population
+GROUP BY continent, location, population
 ORDER BY percent_population_infected DESC
 
 
