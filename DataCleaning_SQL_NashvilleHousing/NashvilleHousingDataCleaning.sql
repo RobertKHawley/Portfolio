@@ -41,8 +41,8 @@ SELECT a.ParcelID, a.PropertyAddress, b.ParcelID, b.PropertyAddress
 , ISNULL(a.PropertyAddress, b.PropertyAddress) AS NewPropertyAddress
 FROM HousingProject.dbo.NashvilleHousing a
 JOIN HousingProject.dbo.NashvilleHousing b
-	ON a.ParcelID = b.ParcelID
-	AND a.[UniqueID ] <> b.[UniqueID ]
+    ON a.ParcelID = b.ParcelID
+    AND a.[UniqueID ] <> b.[UniqueID ]
 WHERE a.PropertyAddress IS NULL
 
 -- Update table using above query
@@ -50,8 +50,8 @@ UPDATE a
 SET a.PropertyAddress = ISNULL(a.PropertyAddress, b.PropertyAddress)
 FROM HousingProject.dbo.NashvilleHousing a
 JOIN HousingProject.dbo.NashvilleHousing b
-	ON a.ParcelID = b.ParcelID
-	AND a.[UniqueID ] <> b.[UniqueID ]
+    ON a.ParcelID = b.ParcelID
+    AND a.[UniqueID ] <> b.[UniqueID ]
 WHERE a.PropertyAddress IS NULL
 
 
@@ -124,18 +124,18 @@ ORDER BY 2
 -- Use case statement to correct non-standardized entries
 SELECT SoldAsVacant
 , CASE WHEN SoldAsVacant = 'Y' THEN 'Yes'
-	   WHEN SoldAsVacant = 'N' THEN 'No'
-	   ELSE SoldAsVacant
+       WHEN SoldAsVacant = 'N' THEN 'No'
+       ELSE SoldAsVacant
        END
 FROM HousingProject.dbo.NashvilleHousing
 
 -- Update table
 UPDATE NashvilleHousing
 SET SoldAsVacant = 
-  CASE WHEN SoldAsVacant = 'Y' THEN 'Yes'
-	   WHEN SoldAsVacant = 'N' THEN 'No'
-	   ELSE SoldAsVacant
-       END
+    CASE WHEN SoldAsVacant = 'Y' THEN 'Yes'
+         WHEN SoldAsVacant = 'N' THEN 'No'
+         ELSE SoldAsVacant
+         END
 
 
 -----------------------
@@ -146,12 +146,12 @@ SET SoldAsVacant =
 WITH CTE AS (
 SELECT *
 , ROW_NUMBER() OVER (
-	PARTITION BY ParcelID
-			   , PropertyAddress
-		   	   , SalePrice
-		       , SaleDate
-		       , LegalReference
-		ORDER BY UniqueID) row_num
+    PARTITION BY ParcelID
+               , PropertyAddress
+               , SalePrice
+               , SaleDate
+               , LegalReference
+        ORDER BY UniqueID) row_num
 FROM HousingProject.dbo.NashvilleHousing
 )
 DELETE FROM CTE
