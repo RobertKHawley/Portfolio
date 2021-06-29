@@ -1,6 +1,3 @@
--- Orginally typed with tabs of size 4
-
-
 -- Total Cases  vs. Total Deaths
 
 -- Countries
@@ -107,11 +104,11 @@ ORDER BY percent_population_deceased DESC
 -- Rolling vaccination count
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(int, vac.new_vaccinations)) OVER (PARTITION BY dea.location ORDER BY dea.location,
-	dea.date) AS rolling_vaccinations_count
+    dea.date) AS rolling_vaccinations_count
 FROM COVID19..COVID19Deaths dea
 JOIN COVID19..COVID19Vaccinations vac
-	ON dea.location = vac.location
-	AND dea.date = vac.date
+    ON dea.location = vac.location
+    AND dea.date = vac.date
 WHERE dea.continent IS NOT NULL
 ORDER BY 2,3
 
@@ -121,11 +118,11 @@ AS
 (
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(int, vac.new_vaccinations)) OVER (PARTITION BY dea.location ORDER BY dea.location,
-	dea.date)/2 AS rolling_vaccinations_count
+    dea.date)/2 AS rolling_vaccinations_count
 FROM COVID19..COVID19Deaths dea
 JOIN COVID19..COVID19Vaccinations vac
-	ON dea.location = vac.location
-	AND dea.date = vac.date
+    ON dea.location = vac.location
+    AND dea.date = vac.date
 WHERE dea.continent IS NOT NULL
 )
 SELECT *, (rolling_vaccinations_count/population) AS vaccinations_per_person
@@ -148,11 +145,11 @@ rolling_vaccinations_count numeric
 INSERT INTO #vaccinations_per_person
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(int, vac.new_vaccinations)) OVER (PARTITION BY dea.location ORDER BY dea.location,
-	dea.date) AS RollingPeopleVaccinated
+    dea.date) AS RollingPeopleVaccinated
 FROM COVID19..COVID19Deaths dea
 JOIN COVID19..COVID19Vaccinations vac
-	ON dea.location = vac.location
-	AND dea.date = vac.date
+    ON dea.location = vac.location
+    AND dea.date = vac.date
 WHERE dea.continent IS NOT NULL
 
 SELECT *, (rolling_vaccinations_count/population) AS vaccinations_per_person
@@ -168,11 +165,11 @@ AS
 (
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(int, vac.new_vaccinations)) OVER (PARTITION BY dea.location ORDER BY dea.location,
-	dea.date) AS rolling_vaccinations_count
+    dea.date) AS rolling_vaccinations_count
 FROM COVID19..COVID19Deaths dea
 JOIN COVID19..COVID19Vaccinations vac
-	ON dea.location = vac.location
-	AND dea.date = vac.date
+    ON dea.location = vac.location
+    AND dea.date = vac.date
 )
 SELECT *, (rolling_vaccinations_count/population) AS vaccinations_per_person
 FROM popvsvac
@@ -186,10 +183,10 @@ FROM #vaccinations_per_person
 )
 SELECT location, ROUND(CAST(latest_vaccinations_per_person AS float), 3) AS latest_vaccinations_per_person,
 CASE
-	WHEN latest_vaccinations_per_person > 1 THEN 'EXCELLENT'
-	WHEN latest_vaccinations_per_person > 0.50 THEN 'GOOD'
-	WHEN latest_vaccinations_per_person > 0.10 THEN 'FAIR'
-	ELSE 'POOR' -- Assume NULL means 0 vaccinations
+    WHEN latest_vaccinations_per_person > 1 THEN 'EXCELLENT'
+    WHEN latest_vaccinations_per_person > 0.50 THEN 'GOOD'
+    WHEN latest_vaccinations_per_person > 0.10 THEN 'FAIR'
+    ELSE 'POOR' -- Assume NULL means 0 vaccinations
 END AS vaccination_status
 FROM cte
 GROUP BY location, latest_vaccinations_per_person
@@ -199,7 +196,7 @@ ORDER BY latest_vaccinations_per_person DESC
 SELECT VPP.location, gdp_per_capita, population, MIN(VPP.date) AS date_GOOD_status_achieved
 FROM vaccinations_per_person VPP
 JOIN COVID19..COVID19Vaccinations vac
-	ON VPP.location = vac.location AND VPP.date = vac.date
+    ON VPP.location = vac.location AND VPP.date = vac.date
 WHERE vaccinations_per_person > 0.5
 AND VPP.continent IS NOT NULL
 GROUP BY VPP.location, gdp_per_capita, population
@@ -216,15 +213,15 @@ SELECT dea.continent, dea.location, dea.date, median_age, population, population
 , reproduction_rate, MAX(reproduction_rate) OVER (PARTITION BY dea.location) AS max_reproduction_rate, new_cases_smoothed
 FROM COVID19..COVID19Deaths dea
 JOIN COVID19..COVID19Vaccinations vac
-	ON dea.location = vac.location
-	AND dea.date = vac.date
+    ON dea.location = vac.location
+    AND dea.date = vac.date
 WHERE new_cases_smoothed > 100 -- Reliable sample size for calculating max reproduction rate
 )
 SELECT cte.location, median_age, population, population_density, gdp_per_capita, max_reproduction_rate
 , MIN(cte.date) AS earliest_MRR_reached
 FROM cte
 JOIN (SELECT location, date, reproduction_rate FROM cte) cte_partial -- Self-join to retrieve corresponding dates
-	ON cte.location = cte_partial.location AND cte.max_reproduction_rate = cte_partial.reproduction_rate
+    ON cte.location = cte_partial.location AND cte.max_reproduction_rate = cte_partial.reproduction_rate
 WHERE cte.continent IS NOT NULL
 GROUP BY cte.location, median_age, population, population_density, gdp_per_capita, max_reproduction_rate
 ORDER BY max_reproduction_rate DESC
@@ -234,8 +231,8 @@ SELECT dea.location, median_age, population, population_density, gdp_per_capita
 , AVG(CAST(reproduction_rate AS float)) AS avg_reproduction_rate, COUNT(*) AS high_infection_rate_days
 FROM COVID19..COVID19Deaths dea
 JOIN COVID19..COVID19Vaccinations vac
-	ON dea.location = vac.location
-	AND dea.date = vac.date
+    ON dea.location = vac.location
+    AND dea.date = vac.date
 WHERE new_cases_smoothed > 10 -- Reliable sample size for calculating avg reproduction rate
 AND new_cases_smoothed/population > 0.00001 -- High infection rate relative to population?
 AND dea.continent IS NOT NULL
