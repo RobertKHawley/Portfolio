@@ -1,6 +1,3 @@
--- Orginally typed with tabs of size 4
-
-
 -----------------
 -- SELECT Data --
 -----------------
