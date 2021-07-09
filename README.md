@@ -1,1 +1,1 @@
-Each folder contains a project. All projects have (so far) been made to practice and demonstrate my skills in data analytics. There is also a copy of the latest version of my CV in case you wish to see it.
+Each folder contains a project. All projects have (so far) been made to practice and demonstrate my skills in data analytics.
